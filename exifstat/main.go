@@ -6,9 +6,9 @@ import (
 	"log"
 	"os"
 
-	"github.com/rwcarlsen/goexif/exif"
-	"github.com/rwcarlsen/goexif/mknote"
-	"github.com/rwcarlsen/goexif/tiff"
+	"github.com/botlink/goexif/exif"
+	"github.com/botlink/goexif/mknote"
+	"github.com/botlink/goexif/tiff"
 )
 
 var mnote = flag.Bool("mknote", false, "try to parse makernote data")
@@ -46,8 +46,9 @@ func main() {
 			return
 		}
 
-		fmt.Printf("\n---- Image '%v' ----\n", name)
-		x.Walk(Walker{})
+		tg, _ := x.Get("Orientation")
+		fmt.Printf("Orientation %v Offset %v\n", tg, tg.ValOffset)
+		//x.Walk(Walker{})
 	}
 }
 
@@ -55,6 +56,6 @@ type Walker struct{}
 
 func (_ Walker) Walk(name exif.FieldName, tag *tiff.Tag) error {
 	data, _ := tag.MarshalJSON()
-	fmt.Printf("    %v: %v\n", name, string(data))
+	fmt.Printf("    %v: %v %v\n", name, string(data), tag.ValOffset)
 	return nil
 }
